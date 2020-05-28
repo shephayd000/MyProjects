@@ -1,0 +1,3 @@
+This Android game is a simple adventure game. Because of the total size of an android game file is greater than 100, I didn't directly upload it. Instead I have only included the source code I made and resource images I also made.
+
+The goal of the game is to get to the treasure in the world map. To interact with the world, place your character over a part of the world and tap on the player. to move tap in the direction you want to go (except diagonally). Some tiles cannot be traversed so your character won't move over them.
