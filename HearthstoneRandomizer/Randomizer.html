@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<meta charset="UTF-8">
+
+<html>
+    <head>
+        <style>
+            html {           
+                min-height:100%;
+                min-width:100vw;
+                overflow: auto;
+            }
+            body {   
+                background: url(background.jpeg); 
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-position: center center;             
+                min-height:100vh;
+                min-width: 100%;
+                height: 100%;
+                overflow: auto;
+                bottom: 30%;
+                margin: 0;              
+            }
+            #heading {
+                top: 20%;
+                font-size: 4vw;
+                font-weight: 600;
+                text-align: center;
+                height: 5vh;
+                margin-bottom: 0%;
+                margin-top: 8%;
+                margin-left: 20%;
+                margin-right: 20%;
+                padding-bottom: 2%;
+                background-color: #663a0e;
+                color: #fff203;
+                border-radius: 30px 30px 0px 0px;
+            }
+            #container {
+                position: relative;
+                margin-left: 20%;
+                margin-right: 20%;               
+                min-height: 60vh;
+                overflow: auto;
+            }
+            #nextCard {
+                width: 66%;
+                background-color: #47320d;
+                font-size: 3vw;
+                margin-top: 5%;
+                margin-left: 25%;
+                margin-right: 25%;
+                width: 50%;
+                border: none;
+                cursor: pointer;
+                color: #fff203;
+                border-radius: 12px;
+            }
+            #card-image{
+                height: 100%;
+                width: 100%;
+            }
+            #leftC {
+                position: absolute;
+                min-height: 100%;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 34%;
+                right: 66%;
+                background: #47320d;
+                height: 100%;
+                overflow: hidden;
+                display: block;
+                border-radius: 0px 0px 0px 15px;
+            }
+            #rightC {  
+                position: absolute;
+                background: #ebce8a;                
+                min-height: 100%;
+                top: 50%;
+                left:34%;
+                width: 66%;
+                transform: translateY(-50%);
+                overflow: hidden;
+                display: block;
+                border-radius: 0px 0px 15px 0px;
+            }
+            .texts {
+                font-size: 2vw;
+                text-align: center;
+                font-family: "BELWE", "FRANKLIN GOTHIC CONDENSED", sans-serif;
+                width: 75%;
+                border: 1px solid black;
+            }
+            #info{
+                padding-right: 3%;
+                width: 100%;
+                height: 100%;
+            }
+            td {
+                width: 50%;               
+                height: 15%;
+            }
+            #card-name {
+                text-align: center;
+                height: 25%;
+                font-size: 3vw;
+                font-weight: 600;
+            }
+            .tlabels {
+                font-size: 2vw;
+                text-align: right;
+                font-family: "BELWE", "FRANKLIN GOTHIC CONDENSED", sans-serif;
+                width: 25%;
+                height: 15%;
+                font-weight: 600;  
+            }
+            
+        </style>
+    </head>
+    <body>
+        <div id="heading">Hearthstone Randomizer</div>
+        <div id="container">           
+            <div id="leftC">
+                <img id="card-image" src="" onerror="this.src='https://hearthcards.ams3.digitaloceanspaces.com/92/5c/94/1d/925c941d.png'">
+            </div>
+
+            <div id="rightC">
+                <table id="info">
+                    <tr>
+                        <th id="card-name" colspan="2">Card Name</th>
+                    </tr>
+                    <tr>
+                        <td class="tlabels">Type: </td>
+                        <td class="texts" id="card-type"></td>
+                    </tr>
+                    <tr>
+                        <td class="tlabels">Set: </td>
+                        <td class="texts" id="card-faction"></td>
+                    </tr>
+                    <tr>
+                        <td class="tlabels">Rarity: </td>
+                        <td class="texts" id="card-rarity"></td> 
+                    </tr>
+                    <tr>
+                        <td class="tlabels">Class: </td>
+                        <td class="texts" id="player-class"></td>
+                    </tr>
+                    <tr>
+                        <td class="tlabels">Artist: </td>
+                        <td class="texts" id="artist-name"></td> 
+                    </tr>
+                </table>
+                <button id="nextCard" onClick="clicked()">Generate</button>                          
+            </div>            
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script>
+            var cardArray;
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "https://omgvamp-hearthstone-v1.p.rapidapi.com/cards/Ysera",
+                "method": "GET",
+                "headers": {
+                    "x-rapidapi-host": "omgvamp-hearthstone-v1.p.rapidapi.com",
+                    "x-rapidapi-key": "d3fcb9a73dmshd6beacfe79722d7p1f98d8jsne30222b1e163"
+                }
+            }
+            $.getJSON('https://api.hearthstonejson.com/v1/45932/enUS/cards.collectible.json', function(data){
+                cardArray = data;  
+            });
+            
+            function clicked(){
+                var number = Math.floor(Math.random() * 2537);
+                var mydata = cardArray[number].name;
+                settings.url = "https://omgvamp-hearthstone-v1.p.rapidapi.com/cards/"+mydata;
+                $.ajax(settings).done(function (response) {
+                    $("#card-name").text(response[0].name);
+                    $("#card-type").text(response[0].type);
+                    $("#card-faction").text(response[0].cardSet);
+                    $("#card-rarity").text(response[0].rarity);
+                    $("#player-class").text(response[0].playerClass);
+                    $("#artist-name").text(response[0].artist);
+                    
+                    $("#card-image").attr("src", "https://art.hearthstonejson.com/v1/render/latest/enUS/256x/"+response[0].cardId+".png");
+                    $("#card-image").attr("alt", "");
+                    $("#card-image").attr("style", "display: block");
+                });
+            }
+        </script>
+    </body>
+</html>        
